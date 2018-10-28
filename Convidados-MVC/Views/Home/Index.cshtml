@@ -1,8 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+<!-- <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -91,4 +91,60 @@
             <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
         </ul>
     </div>
-</div>
+</div> -->
+<br/>
+<form>
+    <div class="row">    
+        <div class="col col-md-5 form-group">
+            <label for="nome">Nome convidado:</label>
+            <input class="form-control" id="nome" type="text" value="" placeholder="Digite um nome..." />        
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading text-center">Lista Convidados</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col col-md-5">
+                    <table>
+                        <thead>                
+                            <th>Nome</th>                
+                        </thead>
+                        <tbody id="tabela">     
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-center">
+                <small id="tabelaDefault"  class="form-text text-muted"><i>Ninguém por aqui...</i></small>  
+            </div>         
+        </div>
+    </div>
+    <div class=" alert alert-danger" role="alert" id="total">Total: 0 convidado(s)</div>
+</form>
+
+@section Scripts
+{
+<script>
+    var contador = 0;
+    $("#nome").blur(function(){
+        PreencheTabela();
+    });
+
+    $("#nome").keypress(function(event){
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            PreencheTabela();
+        }        
+    });
+
+    function PreencheTabela(){
+        if($("#nome").val() != '' && $("#nome").val().length >= 3){
+                contador = contador + 1;
+                $("#total").text("Total: " + contador + " convidado(s)");
+                $("#tabela").append("<tr><td>" + $("#nome").val() + "</td></tr>");
+                $("#nome").val('');
+                $("#tabelaDefault").remove();
+            }
+    }
+</script>
+}
