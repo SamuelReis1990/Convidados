@@ -13,20 +13,33 @@ namespace Convidados_MVC.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            IList<Convidado> model = new List<Convidado>();
+            using (var db = new Contexto())
+            {
+                model = db.Convidado.OrderByDescending(o => o.DataInclusao).ToList() ?? new List<Convidado>();
+            }
+
+            return View(model);
         }
 
         public JsonResult GravarConvidado(string nome)
         {
+            string retorno = string.Empty;
             using (var db = new Contexto())
             {
                 var convidado = db.Set<Convidado>();
-                convidado.Add(new Convidado { Nome = nome });
-
-                db.SaveChanges();
+                if (convidado.Any(c => c.Nome.Equals(nome)))
+                {
+                    retorno = "Convidado já cadastrado!";
+                }
+                else
+                {
+                    convidado.Add(entity: new Convidado { Nome = nome });
+                    db.SaveChanges();
+                }
             }
 
-            return Json("Sucesso");
+            return Json(retorno);
         }
 
         public IActionResult About()

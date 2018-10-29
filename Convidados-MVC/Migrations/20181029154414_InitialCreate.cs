@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ConvidadosMVC.Migrations
 {
@@ -13,7 +14,8 @@ namespace ConvidadosMVC.Migrations
                     Id = table.Column<string>(nullable: false),
                     Nome = table.Column<string>(nullable: true),
                     TipoConvidado = table.Column<string>(nullable: true),
-                    Confirmacao = table.Column<string>(nullable: true)
+                    Confirmacao = table.Column<string>(nullable: true),
+                    DataInclusao = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
