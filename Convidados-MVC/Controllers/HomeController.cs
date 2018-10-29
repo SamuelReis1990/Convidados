@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Convidados_MVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Convidados_MVC.Controllers
 {
@@ -13,6 +14,19 @@ namespace Convidados_MVC.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public JsonResult GravarConvidado(string nome)
+        {
+            using (var db = new Contexto())
+            {
+                var convidado = db.Set<Convidado>();
+                convidado.Add(new Convidado { Nome = nome });
+
+                db.SaveChanges();
+            }
+
+            return Json("Sucesso");
         }
 
         public IActionResult About()

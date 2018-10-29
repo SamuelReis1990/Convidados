@@ -142,9 +142,23 @@
                 contador = contador + 1;
                 $("#total").text("Total: " + contador + " convidado(s)");
                 $("#tabela").append("<tr><td>" + $("#nome").val() + "</td></tr>");
-                $("#nome").val('');
                 $("#tabelaDefault").remove();
+                GravarConvidado();
             }
+    }
+
+    function GravarConvidado(){
+        //var data = { nome: $("#nome").val()};
+        $.ajax({
+                type: "POST",
+                url: '@Url.Action("GravarConvidado","Home")',
+                data:  { nome : $("#nome").val() },
+               // contentType: "application/json",
+                dataType: "JSON",
+                success: function (data) {
+                    $("#nome").val('');
+                }
+            });
     }
 </script>
 }
