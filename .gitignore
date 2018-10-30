@@ -344,3 +344,5 @@ ASALocalRun/
 
 # Arquivos de Bds
 *.db
+Convidados-MVC/App_Data/Casamento.db
+
