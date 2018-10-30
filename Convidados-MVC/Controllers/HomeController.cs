@@ -22,6 +22,7 @@ namespace Convidados_MVC.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public JsonResult GravarConvidado(string nome)
         {
             string retorno = string.Empty;

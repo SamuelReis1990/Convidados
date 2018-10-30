@@ -146,9 +146,9 @@
 {
 <script>
     var contador = @Model.Count;
-    $("#nome").blur(function(){
-        PreencheTabela();
-    });
+    //$("#nome").blur(function(){
+    //    PreencheTabela();
+    //});
 
     $("#nome").keypress(function(event){
         if (event.keyCode == 13) {
@@ -158,7 +158,8 @@
     });
 
     function PreencheTabela(){
-        if($("#nome").val() != '' && $("#nome").val().length >= 3){                                
+        if($("#nome").val() != '' && $("#nome").val().length >= 3){             
+            if(GravarConvidado()){                
                 if(contador > 0){
                     $("#tabela").prepend("<tr><td>" + $("#nome").val() + "</td></tr>");
                 }
@@ -168,25 +169,29 @@
                 }
                 
                 contador = contador + 1;
-                $("#total").text("Total: " + contador + " convidado(s)");
+                $("#total").text("Total: " + contador + " convidado(s)");                
+            }
 
-                GravarConvidado();
+            $("#nome").val('');
         }
     }
 
-    function GravarConvidado(){        
+    function GravarConvidado(){
+        var retorno = true;        
         $.ajax({
                 type: "POST",
                 url: '@Url.Action("GravarConvidado","Home")',
                 data:  { nome : $("#nome").val() },
                 dataType: "json",
-                success: function (data) {
+                async: false,
+                success: function (data) {                    
                     if(data != ''){
                         alert(data);
-                    }
-                    $("#nome").val('');                    
+                        retorno = false;
+                    }    
                 }
             });
+            return retorno;
     }
 </script>
 }
