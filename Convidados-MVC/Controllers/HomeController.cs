@@ -29,7 +29,7 @@ namespace Convidados_MVC.Controllers
             using (var db = new Contexto())
             {
                 var convidado = db.Set<Convidado>();
-                if (convidado.Any(c => c.Nome.Equals(nome)))
+                if (convidado.Any(c => c.Nome.ToUpper().Equals(nome.ToUpper())))
                 {
                     retorno = "Convidado já cadastrado!";
                 }
