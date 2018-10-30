@@ -185,8 +185,13 @@
                 dataType: "json",
                 async: false,
                 success: function (data) {                    
-                    if(data != ''){
-                        alert(data);
+                    if(data != ''){                        
+                        swal({
+                                title: "Atenção:",
+                                text: data,
+                                icon: "warning",
+                                button: "OK",
+                            });
                         retorno = false;
                     }    
                 }
