@@ -99,7 +99,7 @@
     <div class="row">    
         <div class="col col-md-3 form-group">
             <label for="nome">Nome convidado:</label>
-            <input class="form-control" id="nome" type="text" value="" placeholder="Digite um nome..." />        
+            <input class="form-control" id="nome" type="text" value="" placeholder="Digite um nome para cadastro..." />        
         </div>
     </div>
     <div class="row">
@@ -208,7 +208,7 @@
     function UtilizarDataTable(){
             $("#tabelaMain").DataTable({
                 "language": {
-                "lengthMenu": "Exibindo _MENU_ convidados por página",
+                "lengthMenu": "Exibindo _MENU_ por página",
                 "zeroRecords": "Nada encontrado",
                 "info": "Exibindo _PAGE_ de _PAGES_",
                 "infoEmpty": "Nenhum registro disponível",
@@ -225,7 +225,7 @@
 
         $("#tabelaMain_wrapper").addClass("form-inline dt-bootstrap");
         $("#tabelaMain_length").find("Select").addClass("form-control input-sm").css("width", "30%");
-        $("#tabelaMain_filter").find("Input").addClass("form-control input-sm");   
+        $("#tabelaMain_filter").find("Input").addClass("form-control input-sm").prop("placeholder", "Digite para pesquisar...");   
     }
 
 </script>
