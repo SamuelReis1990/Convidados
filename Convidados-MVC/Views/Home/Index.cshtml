@@ -103,11 +103,6 @@
         </div>
     </div>
     <div class="row">
-        <div class="col col-md-3">
-            <div class=" alert alert-danger" role="alert" id="total">Total: @Model.Count convidado(s)</div>
-        </div>
-    </div>
-    <div class="row">
         <div class="col col-md-8">
             <div class="panel panel-info">
                 <div class="panel-heading text-center">Lista Convidados</div>
@@ -137,6 +132,7 @@
                         </div>  
                     }
                 </div>
+                <div class="panel-footer text-center" id="total">Total: @Model.Count convidado(s)</div>
             </div>
         </div>
     </div>
