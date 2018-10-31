@@ -31,11 +31,11 @@ namespace Convidados_MVC.Controllers
                 var convidado = db.Set<Convidado>();
                 if (convidado.Any(c => c.Nome.ToUpper().Equals(nome.ToUpper())))
                 {
-                    retorno = "Convidado já cadastrado!";
+                    retorno = "";
                 }
                 else
                 {
-                    convidado.Add(entity: new Convidado { Nome = nome });
+                    retorno = convidado.Add(entity: new Convidado { Nome = nome }).Entity.Id;                    
                     db.SaveChanges();
                 }
             }
@@ -43,29 +43,18 @@ namespace Convidados_MVC.Controllers
             return Json(retorno);
         }
 
-        public IActionResult About()
+        [HttpDelete]
+        public JsonResult ExcluirConvidado(string id)
         {
-            ViewData["Message"] = "Your application description page.";
+            string retorno = string.Empty;
+            using (var db = new Contexto())
+            {
+                var convidado = db.Set<Convidado>();
+                    convidado.Remove(entity: new Convidado { Id = id });
+                    db.SaveChanges();
+            }
 
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return Json(retorno);
         }
     }
 }
