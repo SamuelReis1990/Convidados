@@ -103,15 +103,20 @@
         </div>
     </div>
     <div class="row">
-        <div class="col col-md-6">
+        <div class="col col-md-3">
+            <div class=" alert alert-danger" role="alert" id="total">Total: @Model.Count convidado(s)</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-md-8">
             <div class="panel panel-info">
                 <div class="panel-heading text-center">Lista Convidados</div>
                 <div id="panelBody" class="panel-body">
                     @if(Model.Count > 0){
                         <div class="row">
-                            <div class="col col-md-5">
-                                <table>
-                                    <thead>                
+                            <div class="col col-md-12">
+                                <table id="tabelaMain" class="table table-striped">
+                                    <thead class="thead-light">                
                                         <th>Convidado(s):</th>                
                                     </thead>
                                     <tbody id="tabela">
@@ -135,20 +140,20 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col col-md-3">
-            <div class=" alert alert-danger" role="alert" id="total">Total: @Model.Count convidado(s)</div>
-        </div>
-    </div>
 </form>
 
 @section Scripts
 {
 <script>
+
     var contador = @Model.Count;
     //$("#nome").blur(function(){
     //    PreencheTabela();
     //});
+
+    $(document).ready( function () {
+        UtilizarDataTable();
+    });
 
     $("#nome").keypress(function(event){
         if (event.keyCode == 13) {
@@ -164,8 +169,9 @@
                     $("#tabela").prepend("<tr><td>" + $("#nome").val() + "</td></tr>");
                 }
                 else{
-                    $("#panelBody").html("<div class='row'><div class='col col-md-5'><table><thead><th>Convidado(s):</th></thead><tbody id='tabela'><tr><td>" + $("#nome").val() + "</td></tr></tbody></table></div></div>");
+                    $("#panelBody").html("<div class='row'><div class='col col-md-12'><table id='tabelaMain' class='table table-striped'><thead><th>Convidado(s):</th></thead><tbody id='tabela'><tr><td>" + $("#nome").val() + "</td></tr></tbody></table></div></div>");
                     $("#tabelaDefault").remove();
+                    UtilizarDataTable();
                 }
                 
                 contador = contador + 1;
@@ -198,5 +204,29 @@
             });
             return retorno;
     }
+
+    function UtilizarDataTable(){
+            $("#tabelaMain").DataTable({
+                "language": {
+                "lengthMenu": "Exibindo _MENU_ convidados por página",
+                "zeroRecords": "Nada encontrado",
+                "info": "Exibindo _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro disponível",
+                "infoFiltered": "(filtrando de _MAX_ registros no total)",
+                "sSearch": "Pesquisar:",
+                "oPaginate": {
+                        "sFirst":    "Primeiro",
+                        "sPrevious": "Anterior",
+                        "sNext":     "Seguinte",
+                        "sLast":     "Último"
+                    }
+            }
+        });
+
+        $("#tabelaMain_wrapper").addClass("form-inline dt-bootstrap");
+        $("#tabelaMain_length").find("Select").addClass("form-control input-sm").css("width", "30%");
+        $("#tabelaMain_filter").find("Input").addClass("form-control input-sm");   
+    }
+
 </script>
 }
