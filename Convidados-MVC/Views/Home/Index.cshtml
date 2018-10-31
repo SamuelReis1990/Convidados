@@ -116,7 +116,7 @@
     function ConfirmaExclusao(id, nome){        
         swal({
             title: "Atenção:",
-            text: "Deseja realmente remover " + nome + " da sua lista de convidados?",
+            text: "Deseja realmente remover " + nome.toUpperCase() + " da sua lista de convidados?",
             icon: "warning",                        
             buttons: ["Cancelar", "Sim"],            
             dangerMode: true
