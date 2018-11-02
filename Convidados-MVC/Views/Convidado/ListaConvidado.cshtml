@@ -1,0 +1,187 @@
+@model List<Convidados_MVC.Models.Convidado>
+
+@{
+    ViewData["Title"] = "Lista Convidados";
+}
+
+<br/>
+<form>
+    <div class="row">    
+        <div class="col col-md-3 form-group">
+            <label for="nome">Nome convidado:</label>
+            <input class="form-control" id="nome" type="text" value="" placeholder="Digite um nome para cadastro..." />        
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-md-8">
+            <div class="panel panel-info">
+                <div class="panel-heading text-center">Lista Convidados</div>
+                <div id="panelBody" class="panel-body">
+                    @if(Model.Count > 0){
+                        <div class="row">
+                            <div class="col col-md-12">
+                                <table id="tabelaMain" class="table table-striped">
+                                    <thead style="color: #31708f;">                
+                                        <th>Convidado(s):</th>
+                                        <th>Situação:</th>
+                                        <th>Ações:</th>
+                                    </thead>
+                                    <tbody id="tabela">
+                                        @foreach (var convidado in Model)
+                                        {
+                                            <tr id="@convidado.Id">                                                
+                                                @if(convidado.Confirmacao.Equals("N")){
+                                                    <td style="color: #31708f;">@convidado.Nome</td>
+                                                    <td style="color: #31708f">Aguardando confirmação</td>
+                                                }
+                                                else{
+                                                    <td style="color: limegreen;">@convidado.Nome</td>
+                                                    <td style="color: limegreen">Confirmado</td>
+                                                }
+                                                <td width="10"><img style="max-height: 40px; cursor: pointer;" src="~/images/lixeira.ico" alt="Excluir" class="img-responsive"  onclick="ConfirmaExclusao('@convidado.Id', '@convidado.Nome');"/></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>   
+                    }
+                    else{
+                        <div class="text-center">
+                            <small class="form-text text-muted"><i>Ninguém por aqui...</i></small>  
+                        </div>  
+                    }
+                </div>
+                <div class="panel-footer text-center" id="total" style="background-color: #d9edf7; border-color: #bce8f1; color: #31708f;">Total: @Model.Count convidado(s)</div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+{
+<script>
+
+    var contador = @Model.Count;
+
+    $(document).ready( function () {
+        UtilizarDataTable();
+    });
+
+    $("#nome").keypress(function(event){
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            PreencheTabela();
+        }        
+    });
+
+    function PreencheTabela(){
+        if($("#nome").val() != '' && $("#nome").val().length >= 3){             
+            var id = GravarConvidado();
+            if(id != ''){            
+                if(contador > 0){
+                    $("#tabela").prepend("<tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + "</td><td style='color: #31708f;'>Aguardando confirmação</td><td width='10'><img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></td></tr>");
+                }
+                else{
+                    $("#panelBody").html("<div class='row'><div class='col col-md-12'><table id='tabelaMain' class='table table-striped'><thead style='color: #31708f;'><th>Convidado(s):</th><th>Situação:</th><th>Ações:</th></thead><tbody id='tabela'><tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + 
+                                         "</td><td style='color: #31708f;'>Aguardando confirmação</td><td width='10'><img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></td></tr></tbody></table></div></div>");
+
+                    $("#tabelaDefault").remove();
+                    UtilizarDataTable();
+                }
+                
+                contador = contador + 1;
+                $("#total").text("Total: " + contador + " convidado(s)");                
+            }
+
+            $("#nome").val('');
+        }
+    }
+
+    function GravarConvidado(){
+        var retorno = '';        
+        $.ajax({
+                type: "POST",
+                url: '@Url.Action("GravarConvidado","Home")',
+                data:  { nome : $("#nome").val() },
+                dataType: "json",
+                async: false,
+                success: function (data) {                    
+                    if(data == ''){                        
+                        swal({
+                                title: "Atenção:",
+                                text: "Convidado já cadastrado!",
+                                icon: "warning",
+                                button: "OK",
+                            });                        
+                    }                    
+                    retorno = data;                    
+                }
+            });
+            return retorno;
+    }
+
+    function ConfirmaExclusao(id, nome){        
+        swal({
+            title: "Atenção:",
+            text: "Deseja realmente remover " + nome.toUpperCase() + " da sua lista de convidados?",
+            icon: "warning",                        
+            buttons: ["Cancelar", "Sim"],            
+            dangerMode: true
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                swal(nome.toUpperCase() + " foi removido com sucesso!", {
+                    icon: "success",
+                });
+                ExcluirConvidado(id);
+            }
+        });
+    }
+
+    function ExcluirConvidado(id){           
+        $.ajax({
+                type: "DELETE",
+                url: '@Url.Action("ExcluirConvidado","Home")',
+                data:  { id : id },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#" + id).remove();
+                    contador = contador - 1;
+                    $("#total").text("Total: " + contador + " convidado(s)");
+                    if(contador == 0){
+                        $("#tabelaMain").remove();
+                        $("#panelBody").html("<div class='text-center'><small class='form-text text-muted'><i>Ninguém por aqui...</i></small></div>");
+                    }
+                }
+            });
+    }
+
+    function UtilizarDataTable(){
+            $("#tabelaMain").DataTable({
+                "language": {
+                "lengthMenu": "Exibindo _MENU_ por página",
+                "zeroRecords": "Nada encontrado",
+                "info": "Exibindo _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro disponível",
+                "infoFiltered": "(filtrando de _MAX_ registros no total)",
+                "sSearch": "Pesquisar:",
+                "oPaginate": {
+                        "sFirst":    "Primeiro",
+                        "sPrevious": "Anterior",
+                        "sNext":     "Seguinte",
+                        "sLast":     "Último"
+                    }
+            }
+        });
+
+        $("#tabelaMain_wrapper").addClass("form-inline dt-bootstrap");
+        $("#tabelaMain_length").find("Select").addClass("form-control input-sm").css("width", "30%");
+        $("#tabelaMain_length").find("Label").css("color", "#31708f");
+        $("#tabelaMain_filter").find("Input").addClass("form-control input-sm").prop("placeholder", "Digite para pesquisar...");   
+        $("#tabelaMain_filter").find("Label").css("color", "#31708f");
+    }
+
+</script>
+}

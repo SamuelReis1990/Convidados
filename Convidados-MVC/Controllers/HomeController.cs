@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Convidados_MVC.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Convidados_MVC.Controllers
 {
@@ -13,60 +15,52 @@ namespace Convidados_MVC.Controllers
     {
         public IActionResult Index()
         {
-            IList<Convidado> model = new List<Convidado>();
-            try
-            {
-                using (var db = new Contexto())
-                {
-                    model = db.Convidado.OrderByDescending(o => o.DataInclusao).ToList() ?? new List<Convidado>();
-                }
-            }
-            catch (Exception e) { }
-
-            return View(model);
+            return View();
         }
-
         [HttpPost]
-        public JsonResult GravarConvidado(string nome)
+        public JsonResult VerificaUsuario(string login, string senha)
         {
             string retorno = string.Empty;
             try
             {
+                senha = GerarHashMd5(senha);
                 using (var db = new Contexto())
                 {
-                    var convidado = db.Set<Convidado>();
-                    if (convidado.Any(c => c.Nome.ToUpper().Equals(nome.ToUpper())))
+                    var usuario = db.Set<Usuario>();
+                    if (!usuario.Any(u => u.Login.ToUpper().Equals(login.ToUpper())))
                     {
-                        retorno = "";
+                        retorno = "Usuário não cadastrado!";
                     }
                     else
                     {
-                        retorno = convidado.Add(entity: new Convidado { Nome = nome }).Entity.Id;
-                        db.SaveChanges();
+                        if (!usuario.Any(u => u.Login.ToUpper().Equals(login.ToUpper()) && u.Senha.Equals(senha)))
+                        {
+                            retorno = "Senha incorreta!";
+                        }
+                        else
+                        {
+                            retorno = "";
+                        }
                     }
                 }
             }
             catch (Exception e) { }
-
             return Json(retorno);
         }
 
-        [HttpDelete]
-        public JsonResult ExcluirConvidado(string id)
+        public static string GerarHashMd5(string senha)
         {
-            string retorno = string.Empty;
-            try
+            MD5 md5Hash = MD5.Create();
+            // Converter a String para array de bytes, que é como a biblioteca trabalha.
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(senha));
+            // Cria-se um StringBuilder para recompôr a string.
+            StringBuilder sBuilder = new StringBuilder();
+            // Loop para formatar cada byte como uma String em hexadecimal
+            for (int i = 0; i < data.Length; i++)
             {
-                using (var db = new Contexto())
-                {
-                    var convidado = db.Set<Convidado>();
-                    convidado.Remove(entity: new Convidado { Id = id });
-                    db.SaveChanges();
-                }
+                sBuilder.Append(data[i].ToString("x2"));
             }
-            catch (Exception e) { }
-            
-            return Json(retorno);
+            return sBuilder.ToString();
         }
     }
 }
