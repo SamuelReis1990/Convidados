@@ -11,5 +11,6 @@ namespace Convidados_MVC.Models
         }
 
          public DbSet<Convidado> Convidado { get; set; }
+         public DbSet<Usuario> Usuario { get; set; }
     }
 }

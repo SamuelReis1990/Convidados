@@ -14,10 +14,14 @@ namespace Convidados_MVC.Controllers
         public IActionResult Index()
         {
             IList<Convidado> model = new List<Convidado>();
-            using (var db = new Contexto())
+            try
             {
-                model = db.Convidado.OrderByDescending(o => o.DataInclusao).ToList() ?? new List<Convidado>();
+                using (var db = new Contexto())
+                {
+                    model = db.Convidado.OrderByDescending(o => o.DataInclusao).ToList() ?? new List<Convidado>();
+                }
             }
+            catch (Exception e) { }
 
             return View(model);
         }
@@ -26,19 +30,23 @@ namespace Convidados_MVC.Controllers
         public JsonResult GravarConvidado(string nome)
         {
             string retorno = string.Empty;
-            using (var db = new Contexto())
+            try
             {
-                var convidado = db.Set<Convidado>();
-                if (convidado.Any(c => c.Nome.ToUpper().Equals(nome.ToUpper())))
+                using (var db = new Contexto())
                 {
-                    retorno = "";
-                }
-                else
-                {
-                    retorno = convidado.Add(entity: new Convidado { Nome = nome }).Entity.Id;                    
-                    db.SaveChanges();
+                    var convidado = db.Set<Convidado>();
+                    if (convidado.Any(c => c.Nome.ToUpper().Equals(nome.ToUpper())))
+                    {
+                        retorno = "";
+                    }
+                    else
+                    {
+                        retorno = convidado.Add(entity: new Convidado { Nome = nome }).Entity.Id;
+                        db.SaveChanges();
+                    }
                 }
             }
+            catch (Exception e) { }
 
             return Json(retorno);
         }
@@ -47,13 +55,17 @@ namespace Convidados_MVC.Controllers
         public JsonResult ExcluirConvidado(string id)
         {
             string retorno = string.Empty;
-            using (var db = new Contexto())
+            try
             {
-                var convidado = db.Set<Convidado>();
+                using (var db = new Contexto())
+                {
+                    var convidado = db.Set<Convidado>();
                     convidado.Remove(entity: new Convidado { Id = id });
                     db.SaveChanges();
+                }
             }
-
+            catch (Exception e) { }
+            
             return Json(retorno);
         }
     }

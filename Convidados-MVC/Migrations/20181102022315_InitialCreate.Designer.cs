@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConvidadosMVC.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20181029154414_InitialCreate")]
+    [Migration("20181102022315_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,13 +27,42 @@ namespace ConvidadosMVC.Migrations
 
                     b.Property<DateTime>("DataInclusao");
 
+                    b.Property<string>("IdUsuario");
+
                     b.Property<string>("Nome");
 
                     b.Property<string>("TipoConvidado");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IdUsuario");
+
                     b.ToTable("Convidado");
+                });
+
+            modelBuilder.Entity("Convidados_MVC.Models.Usuario", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DataInclusao");
+
+                    b.Property<string>("Login");
+
+                    b.Property<string>("Nome");
+
+                    b.Property<string>("Senha");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuario");
+                });
+
+            modelBuilder.Entity("Convidados_MVC.Models.Convidado", b =>
+                {
+                    b.HasOne("Convidados_MVC.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("IdUsuario");
                 });
 #pragma warning restore 612, 618
         }
