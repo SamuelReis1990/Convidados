@@ -102,7 +102,7 @@
         var retorno = '';        
         $.ajax({
                 type: "POST",
-                url: '@Url.Action("GravarConvidado","Home")',
+                url: '@Url.Action("GravarConvidado","Convidado")',
                 data:  { nome : $("#nome").val() },
                 dataType: "json",
                 async: false,
@@ -142,7 +142,7 @@
     function ExcluirConvidado(id){           
         $.ajax({
                 type: "DELETE",
-                url: '@Url.Action("ExcluirConvidado","Home")',
+                url: '@Url.Action("ExcluirConvidado","Convidado")',
                 data:  { id : id },
                 dataType: "json",
                 async: false,
