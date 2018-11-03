@@ -8,6 +8,7 @@ using Convidados_MVC.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace Convidados_MVC.Controllers
 {
@@ -17,35 +18,43 @@ namespace Convidados_MVC.Controllers
         {
             return View();
         }
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Clear();
+            return View("Index");
+        }
+
         [HttpPost]
         public JsonResult VerificaUsuario(string login, string senha)
         {
+            Usuario usuario = new Usuario();
             string retorno = string.Empty;
             try
             {
                 senha = GerarHashMd5(senha);
                 using (var db = new Contexto())
-                {
-                    var usuario = db.Set<Usuario>();
-                    if (!usuario.Any(u => u.Login.ToUpper().Equals(login.ToUpper())))
+                {                    
+                    if (!db.Set<Usuario>().Any(u => u.Login.ToUpper().Equals(login.ToUpper())))
                     {
                         retorno = "Usuário não cadastrado!";
                     }
                     else
                     {
-                        if (!usuario.Any(u => u.Login.ToUpper().Equals(login.ToUpper()) && u.Senha.Equals(senha)))
+                        if (!db.Set<Usuario>().Any(u => u.Login.ToUpper().Equals(login.ToUpper()) && u.Senha.Equals(senha)))
                         {
                             retorno = "Senha incorreta!";
                         }
                         else
                         {
+                            usuario = db.Usuario.Where(u => u.Login.ToUpper().Equals(login.ToUpper()) && u.Senha.Equals(senha)).FirstOrDefault() ?? new Usuario();
                             retorno = "";
+                            HttpContext.Session.SetString("idUsuario", usuario.Id);
                         }
                     }
                 }
             }
             catch (Exception e) { }
-            return Json(retorno);
+            return Json(new { retorno = retorno, nomeUsuario = usuario.Nome, idUsuario = usuario.Id });
         }
 
         public static string GerarHashMd5(string senha)

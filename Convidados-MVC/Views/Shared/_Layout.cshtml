@@ -27,15 +27,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Lista Convidados</a>
+                <a class="navbar-brand">Bem vindo @ViewData["nomeUsuario"]</a>
             </div>
-            <!-- <div class="navbar-collapse collapse">
+            <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Convidado" asp-action="ListaConvidado" asp-route-nomeUsuario='@ViewData["nomeUsuario"]'>Lista Convidados</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="LogOut">Sair</a></li>
                 </ul>
-            </div> -->
+            </div>
         </div>
     </nav>    
 

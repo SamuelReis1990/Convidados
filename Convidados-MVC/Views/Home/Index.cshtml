@@ -82,21 +82,25 @@
                 data: { login : $("#usuario").val(), senha : $("#senha").val() },
                 dataType: "json",
                 success: function (data) {
-                  if(data != '')
+                  if(data.retorno != '')
                   {
                     swal({
                       title: "Atenção:",
-                      text: data,
+                      text: data.retorno,
                       icon: "warning",
                       button: "OK"                      
                     });
                   }
                   else
                   {
-                     window.location.href = '@Url.Action("ListaConvidado", "Convidado")';
+                    var url = '@Url.Action("ListaConvidado", "Convidado", new { nomeUsuario = "param1", idUsuario = "param2" })';
+                    url = url.replace('amp;', '');
+                    url = url.replace('param1', encodeURIComponent(data.nomeUsuario));
+                    url = url.replace('param2', encodeURIComponent(data.idUsuario));
+                    window.location.href = url;                     
                   }                
                 }
-            });            
+            });             
         }
         else{
           swal({

@@ -9,10 +9,5 @@ namespace Convidados_MVC.Models
         public string Login { get; set; }
         public string Senha { get; set; }
         public DateTime DataInclusao { get; set; }
-        public Usuario()
-        {
-            Id = Guid.NewGuid().ToString();
-            DataInclusao = DateTime.Now;            
-        }
     }
 }

@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Convidados_MVC.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace Convidados_MVC.Controllers
 {
     public class ConvidadoController : Controller
     {
-        public IActionResult ListaConvidado()
+        public IActionResult ListaConvidado(string nomeUsuario, string idUsuario)
         {
+            ViewData["nomeUsuario"] = nomeUsuario;
+
             IList<Convidado> model = new List<Convidado>();
             try
             {
@@ -41,7 +44,8 @@ namespace Convidados_MVC.Controllers
                     }
                     else
                     {
-                        retorno = convidado.Add(entity: new Convidado { Nome = nome }).Entity.Id;
+                        var teste = HttpContext.Session.GetString("idUsuario");
+                        retorno = convidado.Add(entity: new Convidado { Nome = nome, IdUsuario = HttpContext.Session.GetString("idUsuario") }).Entity.Id;
                         db.SaveChanges();
                     }
                 }
