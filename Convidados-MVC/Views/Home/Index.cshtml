@@ -19,7 +19,7 @@
       <div id="regbar">
           <div id="navthing">
             <h3><a href="#" id="menuLogin">Acesso Restrito</a></h3>
-            <div id="menu" class="loginForm">
+            <div class="loginForm">
               <div class="arrow-up"></div>
                 <div class="formholder">
                   <div class="randompad">
@@ -35,6 +35,17 @@
             </div>
         </div>
       </div>
+    </div>
+    <div class="text-center">
+        <div style="margin-left: 37%;" class="formholder">
+          <div class="randompad">
+            <fieldset>
+              <label>Prezado convidado, por favor informe o código anexado ao seu convite para confirmar a sua presença:</label>
+              <input id="codConfirmacao" type="text" value="" placeholder="Informe o código aqui..." />
+              <button id="btnConfirmar" class="btn btn-success" style="cursor: pointer;">Confirmar</button>
+            </fieldset>
+          </div>
+        </div>
     </div>
     <div class="container body-content">
         <hr />
@@ -73,6 +84,46 @@
         RealizarLogin();
       });
 
+      $("#btnConfirmar").click(function(){
+        if($("#codConfirmacao").val() != ''){
+         $.ajax({
+              type: "PUT",
+              url: '@Url.Action("AtualizaConvidado","Home")',
+              data: { codConfirmacao : $("#codConfirmacao").val() },
+              dataType: "json",
+              success: function (data) {
+                if(data != '')
+                {
+                  swal({
+                    title: "Atenção:",
+                    text: data,
+                    icon: "error",
+                    button: "OK"                      
+                  });
+                  $("#codConfirmacao").val("");
+                }
+                else
+                {
+                  swal({
+                    title: "Obrigado por sua confirmação!",
+                    icon: "success",
+                    button: "OK"                      
+                  });
+                  $("#codConfirmacao").val("");                   
+                }                
+              }
+          });
+        }
+        else{
+            swal({
+                    title: "Atenção:",
+                    text: "Informe um código!",
+                    icon: "warning",
+                    button: "OK"                      
+                });
+        }          
+      });
+
       function RealizarLogin()
       {
         if($("#usuario").val() != '' && $("#senha").val() != ''){
@@ -87,7 +138,7 @@
                     swal({
                       title: "Atenção:",
                       text: data.retorno,
-                      icon: "warning",
+                      icon: "error",
                       button: "OK"                      
                     });
                   }

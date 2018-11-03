@@ -57,6 +57,31 @@ namespace Convidados_MVC.Controllers
             return Json(new { retorno = retorno, nomeUsuario = usuario.Nome, idUsuario = usuario.Id });
         }
 
+        [HttpPut]
+        public JsonResult AtualizaConvidado(string codConfirmacao)
+        {
+            string retorno = string.Empty;
+            try
+            {
+                using (var db = new Contexto())
+                {                    
+                    if (!db.Set<Convidado>().Any(c => c.Id.ToUpper().Equals(codConfirmacao.ToUpper())))
+                    {
+                        retorno = "Código informado é inválido!";
+                    }
+                    else
+                    {          
+                        Convidado convidado = db.Convidado.Single(c => c.Id.ToUpper().Equals(codConfirmacao.ToUpper()));
+                        convidado.Confirmacao = "S";
+                        db.SaveChanges();                        
+                        retorno = "";
+                    }
+                }
+            }
+            catch (Exception e) { }
+            return Json(retorno);
+        }
+
         public static string GerarHashMd5(string senha)
         {
             MD5 md5Hash = MD5.Create();

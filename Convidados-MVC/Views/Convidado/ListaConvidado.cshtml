@@ -33,12 +33,17 @@
                                                 @if(convidado.Confirmacao.Equals("N")){
                                                     <td style="color: #31708f;">@convidado.Nome</td>
                                                     <td style="color: #31708f">Aguardando confirmação</td>
+                                                    <td width="150"><div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                                <button type="button" class="btn btn-primary btn-sm" onclick="GerarCodigo('@convidado.Id');">Gerar Código</button>
+                                                                <img style="max-height: 40px; cursor: pointer;" src="~/images/lixeira.ico" alt="Excluir" class="img-responsive"  onclick="ConfirmaExclusao('@convidado.Id', '@convidado.Nome');"/>
+                                                                </div>
+                                                    </td>
                                                 }
                                                 else{
                                                     <td style="color: limegreen;">@convidado.Nome</td>
                                                     <td style="color: limegreen">Confirmado</td>
+                                                    <td width="10"><img style="max-height: 25px;" src="~/images/confirmacao.png" alt="Confirmado" class="img-responsive"/></td>
                                                 }
-                                                <td width="10"><img style="max-height: 40px; cursor: pointer;" src="~/images/lixeira.ico" alt="Excluir" class="img-responsive"  onclick="ConfirmaExclusao('@convidado.Id', '@convidado.Nome');"/></td>
                                             </tr>
                                         }
                                     </tbody>
@@ -80,11 +85,13 @@
             var id = GravarConvidado();
             if(id != ''){            
                 if(contador > 0){
-                    $("#tabela").prepend("<tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + "</td><td style='color: #31708f;'>Aguardando confirmação</td><td width='10'><img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></td></tr>");
+                    $("#tabela").prepend("<tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + "</td><td style='color: #31708f;'>Aguardando confirmação</td><td width='150'><div class='btn-group btn-group-toggle' data-toggle='buttons'>" +
+                                                           "<button type='button' class='btn btn-primary btn-sm' onclick='GerarCodigo(\"" + id + "\");'>Gerar Código</button><img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></div></td></tr>");
                 }
                 else{
                     $("#panelBody").html("<div class='row'><div class='col col-md-12'><table id='tabelaMain' class='table table-striped'><thead style='color: #31708f;'><th>Convidado(s):</th><th>Situação:</th><th>Ações:</th></thead><tbody id='tabela'><tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + 
-                                         "</td><td style='color: #31708f;'>Aguardando confirmação</td><td width='10'><img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></td></tr></tbody></table></div></div>");
+                                         "</td><td style='color: #31708f;'>Aguardando confirmação</td><td width='150'><div class='btn-group btn-group-toggle' data-toggle='buttons'><button type='button' class='btn btn-primary btn-sm' onclick='GerarCodigo(\"" + id + "\");'>Gerar Código</button>" +
+                                         "<img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></td></tr></tbody></table></div></div>");
 
                     $("#tabelaDefault").remove();
                     UtilizarDataTable();
@@ -96,6 +103,14 @@
 
             $("#nome").val('');
         }
+    }
+
+    function GerarCodigo(id){
+            swal({
+                    title: id,
+                    text: "Código gerado, envie para o convidado :D",
+                    button: "OK",
+                });
     }
 
     function GravarConvidado(){
