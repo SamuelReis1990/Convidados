@@ -36,16 +36,8 @@
         </div>
       </div>
     </div>
-    <div class="text-center">
-        <div style="margin-left: 37%;" class="formholder">
-          <div class="randompad">
-            <fieldset>
-              <label>Prezado convidado, por favor informe o código anexado ao seu convite para confirmar a sua presença:</label>
-              <input id="codConfirmacao" type="text" value="" placeholder="Informe o código aqui..." />
-              <button id="btnConfirmar" class="btn btn-success" style="cursor: pointer;">Confirmar</button>
-            </fieldset>
-          </div>
-        </div>
+    <div style="padding-top: 200px;">
+      @Html.Partial("~/Views/Shared/_PartialConfirmacao.cshtml");
     </div>
     <div class="container body-content">
         <hr />

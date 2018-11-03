@@ -33,7 +33,8 @@
                                                 @if(convidado.Confirmacao.Equals("N")){
                                                     <td style="color: #31708f;">@convidado.Nome</td>
                                                     <td style="color: #31708f">Aguardando confirmação</td>
-                                                    <td width="150"><div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                    <td width="150">
+                                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                                                 <button type="button" class="btn btn-primary btn-sm" onclick="GerarCodigo('@convidado.Id');">Gerar Código</button>
                                                                 <img style="max-height: 40px; cursor: pointer;" src="~/images/lixeira.ico" alt="Excluir" class="img-responsive"  onclick="ConfirmaExclusao('@convidado.Id', '@convidado.Nome');"/>
                                                                 </div>
@@ -42,7 +43,12 @@
                                                 else{
                                                     <td style="color: limegreen;">@convidado.Nome</td>
                                                     <td style="color: limegreen">Confirmado</td>
-                                                    <td width="10"><img style="max-height: 25px;" src="~/images/confirmacao.png" alt="Confirmado" class="img-responsive"/></td>
+                                                    <td width="150">
+                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                        <img style="max-height: 25px;" src="~/images/confirmacao.png" alt="Confirmado" class="img-responsive"/>
+                                                        <img style="max-height: 40px; cursor: pointer;" src="~/images/lixeira.ico" alt="Excluir" class="img-responsive"  onclick="ConfirmaExclusao('@convidado.Id', '@convidado.Nome');"/>
+                                                        </div>
+                                                    </td>
                                                 }
                                             </tr>
                                         }
@@ -192,7 +198,7 @@
         });
 
         $("#tabelaMain_wrapper").addClass("form-inline dt-bootstrap");
-        $("#tabelaMain_length").find("Select").addClass("form-control input-sm").css("width", "30%");
+        $("#tabelaMain_length").find("Select").addClass("form-control input-sm").css("width", "100%");
         $("#tabelaMain_length").find("Label").css("color", "#31708f");
         $("#tabelaMain_filter").find("Input").addClass("form-control input-sm").prop("placeholder", "Digite para pesquisar...");   
         $("#tabelaMain_filter").find("Label").css("color", "#31708f");
