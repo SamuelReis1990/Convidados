@@ -30,6 +30,7 @@ namespace ConvidadosMVC.Migrations
                     Nome = table.Column<string>(nullable: true),
                     TipoConvidado = table.Column<string>(nullable: true),
                     Confirmacao = table.Column<string>(nullable: true),
+                    Padrinho = table.Column<string>(nullable: true),
                     DataInclusao = table.Column<DateTime>(nullable: false),
                     IdUsuario = table.Column<string>(nullable: true)
                 },

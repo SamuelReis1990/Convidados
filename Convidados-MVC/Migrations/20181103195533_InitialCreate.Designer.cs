@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConvidadosMVC.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20181102022315_InitialCreate")]
+    [Migration("20181103195533_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,6 +30,8 @@ namespace ConvidadosMVC.Migrations
                     b.Property<string>("IdUsuario");
 
                     b.Property<string>("Nome");
+
+                    b.Property<string>("Padrinho");
 
                     b.Property<string>("TipoConvidado");
 

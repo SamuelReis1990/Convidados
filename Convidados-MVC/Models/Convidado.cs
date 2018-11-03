@@ -9,6 +9,7 @@ namespace Convidados_MVC.Models
         public string Nome { get; set; }
         public string TipoConvidado { get; set; }
         public string Confirmacao { get; set; }
+        public string Padrinho { get; set; }
         public DateTime DataInclusao { get; set; }
         public string IdUsuario { get; set; }
         
@@ -19,6 +20,7 @@ namespace Convidados_MVC.Models
             Id = Guid.NewGuid().ToString();
             DataInclusao = DateTime.Now;
             Confirmacao = "N";
+            Padrinho = "N";
         }
     }
 }

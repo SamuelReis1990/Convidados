@@ -29,6 +29,8 @@ namespace ConvidadosMVC.Migrations
 
                     b.Property<string>("Nome");
 
+                    b.Property<string>("Padrinho");
+
                     b.Property<string>("TipoConvidado");
 
                     b.HasKey("Id");
