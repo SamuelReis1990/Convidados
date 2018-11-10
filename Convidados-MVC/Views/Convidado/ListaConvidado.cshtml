@@ -24,7 +24,10 @@
                                     <thead style="color: #31708f;">                
                                         <th>Convidado(s):</th>
                                         <th>Situação:</th>
-                                        <th>Ações:</th>
+                                        <th>Tipo:</th>
+                                        <th>Usuário:</th>
+                                        <th>Ações:</th>                                        
+                                        <th>Alterar Tipo:</th>
                                         <th>Remover:</th>
                                     </thead>
                                     <tbody id="tabela">
@@ -34,12 +37,27 @@
                                                 @if(convidado.Confirmacao.Equals("N")){
                                                     <td style="color: #31708f;">@convidado.Nome</td>
                                                     <td style="color: #31708f">Aguardando confirmação</td>
+                                                    <td style="color: #31708f" id="tipoConvidado_@convidado.Id">@(convidado.TipoConvidado.Equals("Crianca") ? "Criança" : convidado.TipoConvidado)</td>
+                                                    <td style="color: #31708f">@(convidado.IdUsuario.Equals("1") ? "Samuel" : "Tatiane")</td>
                                                     <td><button type="button" class="btn btn-primary btn-sm" onclick="GerarCodigo('@convidado.Id');">Gerar Código</button></td>
+                                                    <td>                                                            
+                                                        @if(convidado.TipoConvidado.Equals("Crianca")){
+                                                            <div id="btnTipoConvidado_@convidado.Id">
+                                                                <button type="button" class="btn btn-primary btn-sm" onclick="AtualizarTipoConvidado('@convidado.Id', 'Adulto');">Adulto</button>
+                                                            </div>
+                                                        }
+                                                        else{
+                                                            <div id="btnTipoConvidado_@convidado.Id">
+                                                                <button type="button" class="btn btn-primary btn-sm" onclick="AtualizarTipoConvidado('@convidado.Id', 'Crianca');">Criança</button>
+                                                            </div>
+                                                        }
+                                                    </td>
                                                     <td width="10"><img style="max-height: 40px; cursor: pointer;" src="~/images/lixeira.ico" alt="Excluir" class="img-responsive"  onclick="ConfirmaExclusao('@convidado.Id', '@convidado.Nome');"/></td>                                                    
                                                 }
                                                 else{
                                                     <td style="color: limegreen;">@convidado.Nome</td>
-                                                    <td style="color: limegreen">Confirmado</td>
+                                                    <td style="color: limegreen;">Confirmado</td>
+                                                    <td style="color: limegreen" id="tipoConvidado_@convidado.Id">@(convidado.TipoConvidado.Equals("Crianca") ? "Criança" : convidado.TipoConvidado)</td>
                                                     <td><img style="max-height: 25px;" src="~/images/confirmacao.png" alt="Confirmado" class="img-responsive"/></td>
                                                     <td><img style="max-height: 40px; cursor: pointer;" src="~/images/lixeira.ico" alt="Excluir" class="img-responsive"  onclick="ConfirmaExclusao('@convidado.Id', '@convidado.Nome');"/></td>
                                                 }
@@ -56,7 +74,20 @@
                         </div>  
                     }
                 </div>
-                <div class="panel-footer text-center" id="total" style="background-color: #d9edf7; border-color: #bce8f1; color: #31708f;">Total: @Model.Count convidado(s)</div>
+                <div class="panel-footer text-center" style="background-color: #d9edf7; border-color: #bce8f1; color: #31708f;">
+                    <div class="row">
+                        <div id="totalAdulto" class="col col-md-6">
+                            Total Adulto: @Model.Count(c => c.TipoConvidado.Equals("Adulto")) adulto(s)
+                        </div>
+                        <div id="totalCrianca" class="col col-md-6">
+                            Total Criança: @Model.Count(c => c.TipoConvidado.Equals("Crianca")) criança(s)
+                        </div>
+                    </div>
+                    <br />
+                    <div id="total" class="row">
+                        Total Geral: @Model.Count convidado(s)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -67,6 +98,8 @@
 <script>
 
     var contador = @Model.Count;
+    var contadorAdulto = @Model.Count(c => c.TipoConvidado.Equals("Adulto"));
+    var contadorCrianca = @Model.Count(c => c.TipoConvidado.Equals("Crianca"));
 
     $(document).ready( function () {
         UtilizarDataTable();
@@ -84,12 +117,12 @@
             var id = GravarConvidado();
             if(id != ''){            
                 if(contador > 0){
-                    $("#tabela").prepend("<tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + "</td><td style='color: #31708f;'>Aguardando confirmação</td><td><button type='button' class='btn btn-primary btn-sm' onclick='GerarCodigo(\"" + id + "\");'>Gerar Código</button></td>" +
-                                                           "<td><img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></div></td></tr>");
+                    $("#tabela").prepend("<tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + "</td><td style='color: #31708f;'>Aguardando confirmação</td><td style='color: #31708f' id='tipoConvidado_" + id + "'>Adulto</td><td style='color: #31708f'>@ViewBag.NomeUsuario</td><td><button type='button' class='btn btn-primary btn-sm' onclick='GerarCodigo(\"" + id + "\");'>Gerar Código</button></td>" +
+                                                           "<td><div id='btnTipoConvidado_" + id + "'><button type='button' class='btn btn-primary btn-sm' onclick='AtualizarTipoConvidado(\"" + id + "\", \"Crianca\");'>Criança</button></div></td><td><img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></div></td></tr>");
                 }
                 else{
-                    $("#panelBody").html("<div class='row'><div class='col col-md-12'><table id='tabelaMain' class='table table-striped'><thead style='color: #31708f;'><th>Convidado(s):</th><th>Situação:</th><th>Ações:</th><th>Remover:</th></thead><tbody id='tabela'><tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + 
-                                         "</td><td style='color: #31708f;'>Aguardando confirmação</td><td><button type='button' class='btn btn-primary btn-sm' onclick='GerarCodigo(\"" + id + "\");'>Gerar Código</button></td>" +
+                    $("#panelBody").html("<div class='row'><div class='col col-md-12'><table id='tabelaMain' class='table table-striped'><thead style='color: #31708f;'><th>Convidado(s):</th><th>Situação:</th><th>Tipo:</th><th>Ações:</th><th>Alterar Tipo:</th><th>Remover:</th></thead><tbody id='tabela'><tr id='" + id + "'><td style='color: #31708f;'>" + $("#nome").val() + 
+                                         "</td><td style='color: #31708f;'>Aguardando confirmação</td><td style='color: #31708f' id='tipoConvidado_" + id + "'>Adulto</td><td style='color: #31708f'>@ViewBag.NomeUsuario</td><td><button type='button' class='btn btn-primary btn-sm' onclick='GerarCodigo(\"" + id + "\");'>Gerar Código</button></td><td><div id='btnTipoConvidado_" + id + "'><button type='button' class='btn btn-primary btn-sm' onclick='AtualizarTipoConvidado(\"" + id + "\", \"Crianca\");'>Criança</button></div></td>" +
                                          "<td><img style='max-height: 40px; cursor: pointer;' src='/images/lixeira.ico' alt='Excluir' class='img-responsive' onclick='ConfirmaExclusao(\"" + id + "\", \"" + $("#nome").val() + "\");'/></td></tr></tbody></table></div></div>");
 
                     $("#tabelaDefault").remove();
@@ -97,7 +130,9 @@
                 }
                 
                 contador = contador + 1;
-                $("#total").text("Total: " + contador + " convidado(s)");                
+                contadorAdulto = contadorAdulto + 1;
+                $("#total").text("Total Geral: " + contador + " convidado(s)");
+                $("#totalAdulto").text("Total Adulto: " + contadorAdulto + " adulto(s)");             
             }
 
             $("#nome").val('');
@@ -160,13 +195,54 @@
                 data:  { id : id },
                 dataType: "json",
                 async: false,
-                success: function (data) {
-                    $("#" + id).remove();
+                success: function (data) {                    
                     contador = contador - 1;
-                    $("#total").text("Total: " + contador + " convidado(s)");
+                    if($("#tipoConvidado_" + id).text() == "Adulto"){
+                        contadorAdulto = contadorAdulto - 1;
+                        $("#totalAdulto").text("Total Adulto: " + contadorAdulto + " adulto(s)");
+                    }
+                    else{
+                        contadorCrianca = contadorCrianca - 1;
+                        $("#totalCrianca").text("Total Criança: " + contadorCrianca + " criança(s)");
+                    }
+
+                    $("#total").text("Total Geral: " + contador + " convidado(s)");
+                    
                     if(contador == 0){
                         $("#tabelaMain").remove();
                         $("#panelBody").html("<div class='text-center'><small class='form-text text-muted'><i>Ninguém por aqui...</i></small></div>");
+                        $("#total").text("Total Geral: " + contador + " convidado(s)");
+                        $("#totalAdulto").text("Total Adulto: " + contador + " adulto(s)");
+                        $("#totalCrianca").text("Total Criança: " + contador + " criança(s)");
+
+                    }
+                    $("#" + id).remove();
+                }
+            });
+    }
+
+    function AtualizarTipoConvidado(id, tipoConvidado){       
+        $.ajax({
+                type: "PUT",
+                url: '@Url.Action("AtualizaTipoConvidado","Convidado")',
+                data:  { codConfirmacao : id, tipoConvidado : tipoConvidado},
+                dataType: "json",
+                success: function (data) {
+                    if(tipoConvidado == 'Crianca'){
+                        $("#tipoConvidado_" + id).text("Criança");
+                        $("#btnTipoConvidado_" + id).html("<button type='button' class='btn btn-primary btn-sm' onclick='AtualizarTipoConvidado(\"" + id + "\", \"Adulto\");'>Adulto</button>");
+                        contadorCrianca = contadorCrianca + 1;
+                        contadorAdulto = contadorAdulto - 1;
+                        $("#totalCrianca").text("Total Criança: " + contadorCrianca + " criança(s)");
+                        $("#totalAdulto").text("Total Adulto: " + contadorAdulto + " adulto(s)");
+                    }
+                    else{
+                        $("#tipoConvidado_" + id).text("Adulto");
+                        $("#btnTipoConvidado_" + id).html("<button type='button' class='btn btn-primary btn-sm' onclick='AtualizarTipoConvidado(\"" + id + "\", \"Crianca\");'>Criança</button>");
+                        contadorCrianca = contadorCrianca - 1;
+                        contadorAdulto = contadorAdulto + 1;
+                        $("#totalCrianca").text("Total Criança: " + contadorCrianca + " criança(s)");
+                        $("#totalAdulto").text("Total Adulto: " + contadorAdulto + " adulto(s)");
                     }
                 }
             });

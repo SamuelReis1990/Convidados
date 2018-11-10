@@ -15,6 +15,7 @@ namespace Convidados_MVC.Controllers
         public IActionResult ListaConvidado(string nomeUsuario, string idUsuario)
         {
             ViewData["nomeUsuario"] = nomeUsuario;
+            ViewBag.NomeUsuario = nomeUsuario;
 
             IList<Convidado> model = new List<Convidado>();
             try
@@ -45,13 +46,31 @@ namespace Convidados_MVC.Controllers
                     else
                     {
                         var teste = HttpContext.Session.GetString("idUsuario");
-                        retorno = convidado.Add(entity: new Convidado { Nome = nome, IdUsuario = HttpContext.Session.GetString("idUsuario") }).Entity.Id;
+                        retorno = convidado.Add(entity: new Convidado { Nome = nome, TipoConvidado = TipoConvidado.Adulto.ToString(), IdUsuario = HttpContext.Session.GetString("idUsuario") }).Entity.Id;
                         db.SaveChanges();
                     }
                 }
             }
             catch (Exception e) { }
 
+            return Json(retorno);
+        }
+
+        [HttpPut]
+        public JsonResult AtualizaTipoConvidado(string codConfirmacao, string tipoConvidado)
+        {
+            string retorno = string.Empty;
+            try
+            {
+                using (var db = new Contexto())
+                {
+                    Convidado convidado = db.Convidado.Single(c => c.Id.ToUpper().Equals(codConfirmacao.ToUpper()));
+                    convidado.TipoConvidado = tipoConvidado;
+                    db.SaveChanges();
+                    retorno = "";
+                }
+            }
+            catch (Exception e) { }
             return Json(retorno);
         }
 
@@ -69,7 +88,7 @@ namespace Convidados_MVC.Controllers
                 }
             }
             catch (Exception e) { }
-            
+
             return Json(retorno);
         }
     }
