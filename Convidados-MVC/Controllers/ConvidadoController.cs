@@ -44,8 +44,7 @@ namespace Convidados_MVC.Controllers
                         retorno = "";
                     }
                     else
-                    {
-                        var teste = HttpContext.Session.GetString("idUsuario");
+                    {                        
                         retorno = convidado.Add(entity: new Convidado { Nome = nome, TipoConvidado = TipoConvidado.Adulto.ToString(), IdUsuario = HttpContext.Session.GetString("idUsuario") }).Entity.Id;
                         db.SaveChanges();
                     }
