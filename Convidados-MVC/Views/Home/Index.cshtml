@@ -136,7 +136,7 @@
                   }
                   else
                   {
-                    var url = '@Url.Action("ListaConvidado", "Convidado", new { nomeUsuario = "param1", idUsuario = "param2" })';
+                    var url = '@Url.Action("Login", "Home", new { nomeUsuario = "param1", idUsuario = "param2" })';
                     url = url.replace('amp;', '');
                     url = url.replace('param1', encodeURIComponent(data.nomeUsuario));
                     url = url.replace('param2', encodeURIComponent(data.idUsuario));

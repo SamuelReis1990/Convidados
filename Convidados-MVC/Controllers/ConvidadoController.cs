@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Convidados_MVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Convidados_MVC.Controllers
 {
     public class ConvidadoController : Controller
     {
+        [Authorize]
         public IActionResult ListaConvidado(string nomeUsuario, string idUsuario)
         {
             ViewData["nomeUsuario"] = nomeUsuario;
