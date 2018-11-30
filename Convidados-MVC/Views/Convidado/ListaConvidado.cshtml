@@ -6,10 +6,10 @@
 
 <br/>
 <form>
-    <div class="row">    
+    <div class="row">
         <div class="col col-md-3 form-group">
             <label for="nome">Nome convidado:</label>
-            <input class="form-control" id="nome" type="text" value="" placeholder="Digite um nome para cadastro..." />        
+            <input class="form-control" id="nome" type="text" value="" placeholder="Digite um nome para cadastro..." />
         </div>
     </div>
     <div class="row">
@@ -105,7 +105,7 @@
         UtilizarDataTable();
     });
 
-    $("#nome").keypress(function(event){
+    $("#nome").keydown(function(event){
         if (event.keyCode == 13) {
             event.preventDefault();
             PreencheTabela();
